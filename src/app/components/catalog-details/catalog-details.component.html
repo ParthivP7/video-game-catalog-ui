@@ -1,0 +1,42 @@
+<div class="container mt-4" *ngIf="form">
+  <h3 *ngIf="isNew; else editHeader">Create New Video Game</h3>
+  <ng-template #editHeader>
+    <h3>Edit Game: {{ form.value.title }}</h3>
+  </ng-template>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Title</label>
+      <input class="form-control" formControlName="title" />
+      <div class="text-danger" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">
+        Title is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Genre</label>
+      <input class="form-control" formControlName="genre" />
+      <div class="text-danger" *ngIf="form.get('genre')?.invalid && form.get('genre')?.touched">
+        Genre is required.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Release Date</label>
+      <input type="date" class="form-control" formControlName="releaseDate" />
+      <div class="text-danger" *ngIf="form.get('releaseDate')?.invalid && form.get('releaseDate')?.touched">
+        Release Date is required.
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success" [disabled]="form.invalid">
+        {{ isNew ? 'Create' : 'Update' }}
+      </button>
+
+      <a [routerLink]="['/catalog']" class="btn btn-secondary">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
