@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-end mb-2">
+  <a [routerLink]="['/catalog/new']" class="btn btn-outline-primary">
+    + Add New Game
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Video Game Catalog</h5>
+    <div *ngIf="catalog$ | async as catalog; else loading">
+      <span class="badge bg-light text-dark">Total: {{ catalog.length }}</span>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <table class="table table-hover table-striped mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Release Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (catalog of paginatedCatalog$ | async; track catalog.videoGameId) {
+          <tr>
+            <td>{{ catalog.title }}</td>
+            <td>{{ catalog.genre }}</td>
+            <td>{{ catalog.releaseDate | date: 'mediumDate' }}</td>
+            <td>
+              <!-- Edit Button -->
+              <a [routerLink]="['/catalog', catalog.videoGameId]"
+                 class="btn btn-sm btn-outline-primary me-2"
+                 title="Edit">
+                ✏️
+              </a>
+
+              <!-- Delete Button -->
+              <button (click)="deleteGame(catalog.videoGameId)"
+                      class="btn btn-sm btn-outline-danger"
+                      title="Delete">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-footer bg-light d-flex justify-content-center">
+    <ngb-pagination
+      [collectionSize]="(catalog$ | async)?.length || 0"
+      [(page)]="page"
+      [pageSize]="pageSize"
+      [maxSize]="5"
+      [boundaryLinks]="true"
+      size="sm"
+      (pageChange)="onPageChange($event)">
+    </ngb-pagination>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="text-center p-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>
